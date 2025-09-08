@@ -1,31 +1,26 @@
-name: Build Docs for GitHub Pages
+name: Build and Deploy
 
 on:
   push:
     branches:
-      - main   # or master if that's your default
-
-permissions:
-  contents: write
+      - main
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Build docs folder
+      - name: Build site (copy code → publish folder)
         run: |
-          rm -rf docs/*
-          mkdir -p docs
-          cp -r code/* docs/
-          cp -r assets docs/
+          mkdir -p public
+          cp -r code/* public/
+          cp -r assets public/
 
-      - name: Commit and push docs
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs
-          git commit -m "Auto-build docs folder" || echo "No changes to commit"
-          git push
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
