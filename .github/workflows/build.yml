@@ -1,0 +1,28 @@
+name: Build Docs for GitHub Pages
+
+on:
+  push:
+    branches:
+      - main   # or master if that's your default
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Build docs folder
+        run: |
+          rm -rf docs/*
+          mkdir -p docs
+          cp -r code/* docs/
+          cp -r assets docs/
+
+      - name: Commit and push docs
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs
+          git commit -m "Auto-build docs folder" || echo "No changes to commit"
+          git push
