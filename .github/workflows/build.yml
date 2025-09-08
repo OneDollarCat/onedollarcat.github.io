@@ -26,3 +26,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
           publish_branch: gh-pages
+          force_orphan: true   # always start fresh branch
+          enable_jekyll: false # hard-disable Jekyll
