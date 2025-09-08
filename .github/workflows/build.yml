@@ -12,11 +12,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Build site (copy code → publish folder)
+      - name: Build site (copy root → public folder)
         run: |
           mkdir -p public
-          cp -r code/* public/
-          cp -r assets public/
+          cp -r root/code/* public/
+          cp -r root/assets public/
+          # Add .nojekyll so GitHub Pages doesn't try Jekyll
+          touch public/.nojekyll
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
